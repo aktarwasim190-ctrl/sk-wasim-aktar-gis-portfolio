@@ -1,28 +1,56 @@
-/* Performance-first interaction layer */
+/* Spatial depth through borders and small transforms; no continuous card animation. */
 .noise{display:none!important}
-.topo{animation:none!important;opacity:.11!important}
-nav{background:rgba(5,13,11,.97)!important;backdrop-filter:none!important}
-.transition-screen{background:rgba(3,10,8,.95)!important;backdrop-filter:none!important;transition:opacity .1s ease!important}
-.transition-screen:before{transition:transform .14s ease!important;box-shadow:0 0 14px rgba(113,231,176,.38)!important}
-body{animation-duration:.22s!important}
-section{content-visibility:auto;contain-intrinsic-size:1px 850px}
-.reveal{transform:translateY(18px)!important;transition-duration:.44s!important}
-.reveal.show{transform:none!important}
-.feature:before,.project:after,.lab-media img{transition-duration:.34s!important}
-.feature,.project,.lab-card,.panel,.step,.contact-card{will-change:transform;transition-property:transform,border-color,box-shadow,background!important;transition-duration:.26s!important;transition-timing-function:cubic-bezier(.22,1,.36,1)!important}
-.feature:hover,.feature:focus-visible,.project:hover,.project:focus-visible,.lab-card:hover,.lab-card:focus-within,.panel:hover,.step:hover,.contact-card:hover,.contact-card:focus-visible{transform:translateY(-7px) scale(1.012)!important;border-color:rgba(113,231,176,.58)!important;box-shadow:0 22px 48px rgba(0,0,0,.32),0 0 0 1px rgba(113,231,176,.09)!important}
-.lab-card:hover img{transform:scale(1.025)!important}
-.modal{backdrop-filter:none!important}
+.topo{animation:none;opacity:.12}
+nav{background:rgba(5,17,13,.97);backdrop-filter:none;transition:border-color .2s ease}
+.transition-screen{background:#07120e;backdrop-filter:none}
+body{animation:none}
+.reveal{transform:translateY(14px);transition:opacity .42s ease,transform .42s cubic-bezier(.2,.75,.2,1)}
+.reveal.show{transform:none}
+.feature,.project,.lab-card,.panel,.step,.contact-card{
+  position:relative;isolation:isolate;
+  transition:transform .28s cubic-bezier(.2,.75,.2,1),border-color .28s ease,box-shadow .28s ease;
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  box-shadow:0 8px 0 -6px rgba(113,231,176,.26),0 18px 36px -26px rgba(0,0,0,.6);
+}
+.feature:focus-visible,.project:focus-visible,.lab-card:focus-within,.contact-card:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.feature:before,.project:after,.lab-media img{transition-duration:.3s}
+.lab-card:hover img{transform:scale(1.025)}
+.modal{backdrop-filter:none}
 .contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .contact-card{display:flex;flex-direction:column;min-height:220px;padding:28px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,#102920,#091914)}
 .contact-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:rgba(113,231,176,.1);color:var(--mint);font-size:1.2rem;margin-bottom:34px}
 .contact-card small{color:var(--mint);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 .contact-card strong{font:700 1.15rem/1.4 var(--display);margin-top:7px}
 .contact-card span{color:var(--muted);margin-top:5px}
-.collab{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;margin-top:22px;padding:34px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(135deg,rgba(85,183,255,.1),rgba(113,231,176,.09));transition:transform .26s ease,border-color .26s ease}
-.collab:hover{transform:translateY(-5px);border-color:rgba(113,231,176,.48)}
+.collab{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;margin-top:22px;padding:34px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(135deg,rgba(85,183,255,.1),rgba(113,231,176,.09));transition:transform .28s ease,border-color .28s ease}
 .collab h3{font:750 clamp(1.5rem,3vw,2.5rem)/1.1 var(--display);letter-spacing:-.04em;margin:0 0 10px}
 .collab p{max-width:720px;color:#b8cdc4;margin:0}
+.project[hidden]{display:none!important}
+@media(hover:hover) and (pointer:fine){
+  .feature:hover,.project:hover,.lab-card:hover,.panel:hover,.step:hover,.contact-card:hover{
+    transform:perspective(900px) translateY(-5px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+    border-color:rgba(113,231,176,.55);
+    box-shadow:0 13px 0 -9px rgba(113,231,176,.35),0 24px 44px -24px rgba(0,0,0,.75);
+  }
+  .collab:hover{transform:translateY(-4px);border-color:rgba(113,231,176,.48)}
+}
 @media(max-width:900px){.contact-grid{grid-template-columns:1fr 1fr}.collab{grid-template-columns:1fr}}
-@media(max-width:560px){.contact-grid{grid-template-columns:1fr}.feature:hover,.project:hover,.lab-card:hover,.panel:hover,.step:hover,.contact-card:hover{transform:translateY(-3px) scale(1.005)!important}}
-@media(prefers-reduced-motion:reduce){.feature,.project,.lab-card,.panel,.step,.contact-card,.collab{will-change:auto!important}}
+@media(max-width:700px), (pointer:coarse){
+  html{scroll-behavior:auto}
+  body{background:#06120e}
+  body:before{position:absolute;bottom:auto;height:900px;background:radial-gradient(ellipse at 20% 12%,rgba(58,143,111,.17),transparent 55%),linear-gradient(#071712,#06120e)}
+  body:after{position:absolute;bottom:auto;height:950px;opacity:.08;mask-image:none;background-size:56px 56px}
+  .topo{position:absolute;bottom:auto;height:1000px;inset-inline:0;opacity:.075;overflow:hidden}
+  .topo:before{display:none}
+  .transition-screen{display:none}
+  .marquee-track{animation:none;transform:none}
+  .feature,.project,.lab-card,.panel,.step,.contact-card{transform:none;box-shadow:0 9px 0 -7px rgba(113,231,176,.28),0 16px 25px -25px #000}
+  .feature:hover,.project:hover,.lab-card:hover,.panel:hover,.step:hover,.contact-card:hover{transform:none;box-shadow:0 9px 0 -7px rgba(113,231,176,.28),0 16px 25px -25px #000}
+  .feature:active,.project:active,.lab-card:active,.btn:active,.contact-card:active{transform:scale(.985);transition-duration:.14s}
+  .feature:before,.project:after{box-shadow:none}
+  .lab-card:hover img{transform:none}
+  .reveal{transform:translateY(8px);transition-duration:.3s}
+  .hero{min-height:auto}
+}
+@media(max-width:560px){.contact-grid{grid-template-columns:1fr}.feature,.project{min-height:280px}.portrait{box-shadow:0 22px 40px -25px #000}}
+@media(prefers-reduced-motion:reduce){.feature,.project,.lab-card,.panel,.step,.contact-card,.collab{transform:none!important;transition:none!important}.reveal{opacity:1;transform:none}.marquee-track{animation:none}}
